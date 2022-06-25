@@ -11,9 +11,18 @@ export default class MessageBroker {
     public static instance: MessageBroker;
 
     constructor(public connection: amqp.Connection, public channel: amqp.Channel) {
+        // Starting to listen
+        channel.consume("auth", (msg) => {
+            if (msg !== null) {
+                console.log("<Received> " + msg.content.toString());
+                channel.ack(msg);
+            } else console.log('Consumer cancelled by server');
+        }).then(_ => {
+            /* */
+        })
     }
 
-    /**
+     /**
      * Initializing a new instance of the MessageBroker
      */
     static async init(): Promise<MessageBroker> {

@@ -1,6 +1,7 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import * as dotenv from "dotenv"
+import express from "express"
 
 dotenv.config();
 
@@ -17,3 +18,5 @@ export const AppDataSource = new DataSource({
     migrations: [],
     subscribers: [],
 })
+
+export const Express = express();
