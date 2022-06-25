@@ -1,10 +1,8 @@
-import express from "express"
+import { AppDataSource } from "./data-source"
+import MessageBroker from "./broker";
 
-/**
- * Entry Point
- */
-(async function main() {
+AppDataSource.initialize().then(async () => {
 
-})().then(() => {
-    /* */
-})
+    await (await MessageBroker.init()).send("auth", "Test123")
+
+}).catch(error => console.log(error))
