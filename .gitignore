@@ -1,0 +1,7 @@
+.env
+*.iml
+
+dist
+.idea
+.docker-conf
+node_modules
