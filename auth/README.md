@@ -1,7 +1,27 @@
-# Awesome Project Build with TypeORM
+# Auth-Service
 
-Steps to run this project:
+This Service takes care about authenticating the user.
 
-1. Run `npm i` command
-2. Setup database settings inside `data-source.ts` file
-3. Run `npm start` command
+## Environment Variables
+```
+RABBITMQ_URL=""
+
+DB_HOST=""
+DB_USERNAME=""
+DB_PASSWORD=""
+DB_DEFAULT=""
+
+JWT_SECRET=""
+```
+
+## Technologies used
+- [RabbitMQ](https://www.rabbitmq.com/)
+- [Postgres](https://www.postgresql.org/)
+- [JWT](https://jwt.io/)
+- [Express](https://expressjs.com/)
+- [NodeJS](https://nodejs.org/)
+- [TypeOrm](https://typeorm.io/)
+- [Dotenv](https://www.npmjs.com/package/dotenv)
+- [Helmet](https://helmetjs.github.io/)
+- [Cors](https://www.npmjs.com/package/cors)
+- [Bcrypt](https://www.npmjs.com/package/bcrypt)
