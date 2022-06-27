@@ -52,6 +52,35 @@ export async function register(username: string, password: string): Promise<Serv
 }
 
 /**
+ * This function is used to verify that a token is valid
+ * @param token the token to verify
+ */
+export async function checkToken(token: string): Promise<ServiceResponse> {
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        return {status: 200, content: {error: false}}
+    } catch (error) {
+        return {status: 400, content: {error: true}}
+    }
+}
+
+/**
+ * Getting a user from the database by its id
+ * @param token
+ */
+export async function getUser(token: string): Promise<ServiceResponse> {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: number, username: string }
+    const user = await AppDataSource.getRepository(User).findOne({
+        where: {id: decoded.id}
+    })
+
+    if (user === null)
+        return {status: 400, content: {error: true}}
+
+    return {status: 200, content: {error: false, user}}
+}
+
+/**
  * Initializing every route
  */
 export function initService() {
