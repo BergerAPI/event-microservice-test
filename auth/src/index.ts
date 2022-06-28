@@ -14,7 +14,7 @@ AppDataSource.initialize().then(async () => {
     // Initializing the service-routes
     initService();
 
-    Express.listen(3000, () => {
+    Express.listen(process.env.PORT || 3000, () => {
         console.log("Express is listening.")
     })
 

@@ -4,18 +4,16 @@ This Service takes care about authenticating the user.
 
 ## Environment Variables
 ```
-RABBITMQ_URL=""
-
 DB_HOST=""
 DB_USERNAME=""
 DB_PASSWORD=""
 DB_DEFAULT=""
 
 JWT_SECRET=""
+PORT=0
 ```
 
 ## Technologies used
-- [RabbitMQ](https://www.rabbitmq.com/)
 - [Postgres](https://www.postgresql.org/)
 - [JWT](https://jwt.io/)
 - [Express](https://expressjs.com/)

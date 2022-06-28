@@ -84,19 +84,19 @@ export async function getUser(token: string): Promise<ServiceResponse> {
  * Initializing every route
  */
 export function initService() {
-    Express.post("/auth/login", (req, res) => {
+    Express.post("/login", (req, res) => {
         return makeSure(req, res, login);
     })
 
-    Express.post("/auth/register", (req, res) => {
+    Express.post("/register", (req, res) => {
         return makeSure(req, res, register);
     });
 
-    Express.post("/auth/check-token", (req, res) => {
+    Express.post("/check-token", (req, res) => {
         return makeSure(req, res, checkToken);
     });
 
-    Express.get("/auth/get-user", (req, res) => {
+    Express.get("/get-user", (req, res) => {
         const tokenQuery = req.query.token as string;
 
         if (tokenQuery === undefined)
