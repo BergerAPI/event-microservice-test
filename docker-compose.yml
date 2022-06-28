@@ -7,13 +7,3 @@ services:
       - "5432:5432"
     env_file:
       - "postgres.env"
-
-  rabbitmq:
-    image: rabbitmq:management
-    container_name: "rabbitmq"
-    volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    ports:
-      - "15672:15672"
-      - "5672:5672"
