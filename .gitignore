@@ -3,5 +3,5 @@ postgres.env
 
 dist
 .idea
-.docker-conf
+.docker-volume
 node_modules
