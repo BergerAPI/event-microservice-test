@@ -1,5 +1,6 @@
 postgres.env
 *.iml
+.env
 
 dist
 .idea
