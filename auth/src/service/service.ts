@@ -20,8 +20,7 @@ export async function login(username: string, password: string): Promise<Service
 
     // Generating the jwt-token
     const token = jwt.sign({
-        id: user.id,
-        username: user.username
+        accountId: user.id,
     }, process.env.JWT_SECRET, {
         expiresIn: "3h"
     })
