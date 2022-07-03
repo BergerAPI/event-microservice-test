@@ -1,7 +1,7 @@
-import {NextFunction, Request, Response} from "express";
-import axios from "axios";
+import {NextFunction, Response} from "express";
+import * as jwt from "jsonwebtoken";
 
-export default async function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export default async function authMiddleware(req: any, res: Response, next: NextFunction) {
     if (!req.headers.authorization)
         return res.status(401).json({error: true, message: "No authorization header"});
 
@@ -10,15 +10,12 @@ export default async function authMiddleware(req: Request, res: Response, next: 
     if (token === undefined)
         return res.status(400).json({error: true, message: "No token provided"});
 
-    axios.post(`${process.env.API_GATEWAY}/auth/check-token`, {
-        token
-    }).then(response => {
-        if (response.data.error)
-            return res.status(400).json({error: true, message: "Invalid token"});
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET) as any;
 
-        next();
-    }).catch(error => {
-        console.log(error)
-        return res.status(400).json({error: true, message: "Invalid token"});
-    });
+    if (decoded === undefined || decoded.accountId === undefined)
+        return res.status(401).json({error: true, message: "Invalid token"});
+
+    req.user = decoded;
+
+    next();
 }
