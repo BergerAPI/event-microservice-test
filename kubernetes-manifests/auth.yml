@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-configmap
+data:
+  POSTGRES_DB: pg
+  DB_HOST: postgres
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: auth
+  template:
+    metadata:
+      labels:
+        component: auth
+    spec:
+      containers:
+        - name: auth
+          image: bergerapi/simple-microservice-auth
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: postgres
+            - secretRef:
+                name: auth
+            - configMapRef:
+                name: auth-configmap
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+spec:
+  selector:
+    component: auth
+  ports:
+    - port: 3000
+      targetPort: 3000
