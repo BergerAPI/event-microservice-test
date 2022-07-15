@@ -4,7 +4,7 @@ metadata:
   name: auth-configmap
 data:
   POSTGRES_DB: "pg"
-  DB_HOST: "postgres-service:5432"
+  DB_HOST: "accounts-db:5432"
 
 ---
 
@@ -54,7 +54,7 @@ spec:
             periodSeconds: 20
           envFrom:
             - secretRef:
-                name: postgres
+                name: accounts-db
             - secretRef:
                 name: auth
             - configMapRef:

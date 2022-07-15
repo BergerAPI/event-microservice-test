@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-service
+  name: accounts-db
 spec:
   type: ClusterIP
   selector:
-    app: postgres
+    app: accounts-db
   ports:
     - port: 5432
       targetPort: 5432
@@ -16,7 +16,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postgres-configmap
+  name: accounts-db-configmap
 data:
   POSTGRES_DB: "pg"
 
@@ -25,47 +25,47 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: accounts-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: accounts-db
   template:
     metadata:
       labels:
-        app: postgres
+        app: accounts-db
     spec:
       containers:
-        - name: postgres
+        - name: accounts-db
           image: postgres:12.10
           livenessProbe:
             tcpSocket:
               port: 5432
           ports:
             - containerPort: 5432
-              name: postgres
+              name: accounts-db
           envFrom:
             - secretRef:
-                name: postgres
+                name: accounts-db
             - configMapRef:
-                name: postgres-configmap
+                name: accounts-db-configmap
           volumeMounts:
-            - name: postgres-database-storage
+            - name: accounts-db-database-storage
               mountPath: /var/lib/pgsql/data
       volumes:
-        - name: postgres-database-storage
+        - name: accounts-db-database-storage
           persistentVolumeClaim:
-            claimName: postgres-pv-claim
+            claimName: accounts-db-pv-claim
 
 ---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-pv-claim
+  name: accounts-db-pv-claim
   labels:
-    app: postgres
+    app: accounts-db
 spec:
   accessModes:
     - ReadWriteOnce

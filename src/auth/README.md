@@ -1,6 +1,12 @@
 # Auth-Service
-
 This Service takes care about authenticating the user.
+
+## Endpoints
+| Endpoint     | Type | Auth? | Description                                           |
+|--------------|------|-------|-------------------------------------------------------|
+| `/login`     | POST |       | Returns a JWT if authentication is successful.        |
+| `/register`  | POST |       | Validates and creates a new user record.              |
+| `/get-token` | GET  | 🔒     | Returns user information if available and authorized. |
 
 ## Environment Variables
 ```
@@ -12,14 +18,3 @@ DB_DEFAULT=""
 JWT_SECRET=""
 PORT=0
 ```
-
-## Technologies used
-- [Postgres](https://www.postgresql.org/)
-- [JWT](https://jwt.io/)
-- [Express](https://expressjs.com/)
-- [NodeJS](https://nodejs.org/)
-- [TypeOrm](https://typeorm.io/)
-- [Dotenv](https://www.npmjs.com/package/dotenv)
-- [Helmet](https://helmetjs.github.io/)
-- [Cors](https://www.npmjs.com/package/cors)
-- [Bcrypt](https://www.npmjs.com/package/bcrypt)

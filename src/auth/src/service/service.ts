@@ -91,10 +91,6 @@ export function initService() {
         return makeSure(req, res, register);
     });
 
-    Express.post("/check-token", (req, res) => {
-        return makeSure(req, res, checkToken);
-    });
-
     Express.get("/get-user", (req, res) => {
         const tokenQuery = req.query.token as string;
 

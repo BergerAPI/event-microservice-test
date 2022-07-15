@@ -2,7 +2,7 @@
 ### Adding the secrets
 
 ```shell
- kubectl create secret generic postgres \
+ kubectl create secret generic accounts-db \
 --from-literal=POSTGRES_USER="asd" \
 --from-literal=POSTGRES_PASSWORD="asd"
 
