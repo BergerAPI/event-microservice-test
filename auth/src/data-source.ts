@@ -6,10 +6,12 @@ import {User} from "./entity/User";
 
 dotenv.config();
 
+const hostPort = process.env.DB_HOST.split(":")
+
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: process.env.DB_HOST,
-    port: 5432,
+    host: hostPort[0],
+    port: Number(hostPort[1]),
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
