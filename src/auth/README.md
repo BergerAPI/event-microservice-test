@@ -16,5 +16,4 @@ DB_PASSWORD=""
 DB_DEFAULT=""
 
 JWT_SECRET=""
-PORT=0
 ```
