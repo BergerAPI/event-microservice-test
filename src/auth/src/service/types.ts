@@ -7,6 +7,10 @@ export type ServiceResponse = {
     content: any
 }
 
+/**
+ * Simple Monad to reduce duplicate code and check if certain values contain
+ * certain properties
+ */
 export class Requirement {
 
     constructor(
