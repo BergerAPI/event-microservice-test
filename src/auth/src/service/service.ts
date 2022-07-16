@@ -1,9 +1,8 @@
 import * as jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import {AppDataSource, Express} from "../data-source";
-import {User} from "../entity/User";
-import {ServiceResponse} from "./types";
-import {makeSure} from "./util";
+import { AppDataSource, Express } from "../data-source";
+import { User } from "../entity/User";
+import { Requirement, ServiceResponse } from "./types";
 
 /**
  * Generating a token for a person to automatically authenticate
@@ -12,11 +11,11 @@ import {makeSure} from "./util";
  */
 export async function login(username: string, password: string): Promise<ServiceResponse> {
     const user = await AppDataSource.getRepository(User).findOne({
-        where: {username}
+        where: { username }
     });
 
     if (user === undefined || user === null || !(await bcrypt.compare(password, user.password)))
-        return {status: 400, content: {error: true}}
+        return { status: 400, content: { error: true } }
 
     // Generating the jwt-token
     const token = jwt.sign({
@@ -25,7 +24,7 @@ export async function login(username: string, password: string): Promise<Service
         expiresIn: "3h"
     })
 
-    return {status: 200, content: {error: false, token}}
+    return { status: 200, content: { error: false, token } }
 }
 
 /**
@@ -35,11 +34,11 @@ export async function login(username: string, password: string): Promise<Service
  */
 export async function register(username: string, password: string): Promise<ServiceResponse> {
     const user = await AppDataSource.getRepository(User).findOne({
-        where: {username}
+        where: { username }
     });
 
     if (user !== null)
-        return {status: 400, content: {error: true}}
+        return { status: 400, content: { error: true } }
 
     // Creating the user-instance which will be written to the database
     const instance = new User()
@@ -47,7 +46,7 @@ export async function register(username: string, password: string): Promise<Serv
     instance.password = await bcrypt.hash(password, 10);
     await AppDataSource.getRepository(User).save(instance)
 
-    return {status: 200, content: {error: false}}
+    return { status: 200, content: { error: false } }
 }
 
 /**
@@ -57,9 +56,9 @@ export async function register(username: string, password: string): Promise<Serv
 export async function checkToken(token: string): Promise<ServiceResponse> {
     try {
         jwt.verify(token, process.env.JWT_SECRET);
-        return {status: 200, content: {error: false}}
+        return { status: 200, content: { error: false } }
     } catch (error) {
-        return {status: 400, content: {error: true}}
+        return { status: 400, content: { error: true } }
     }
 }
 
@@ -70,13 +69,13 @@ export async function checkToken(token: string): Promise<ServiceResponse> {
 export async function getUser(token: string): Promise<ServiceResponse> {
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: number, username: string }
     const user = await AppDataSource.getRepository(User).findOne({
-        where: {id: decoded.id}
+        where: { id: decoded.id }
     })
 
     if (user === null)
-        return {status: 400, content: {error: true}}
+        return { status: 400, content: { error: true } }
 
-    return {status: 200, content: {error: false, user}}
+    return { status: 200, content: { error: false, user } }
 }
 
 /**
@@ -84,19 +83,35 @@ export async function getUser(token: string): Promise<ServiceResponse> {
  */
 export function initService() {
     Express.post("/login", (req, res) => {
-        return makeSure(req, res, login);
+        const result = new Requirement(req.body)
+            .check("username", "password")
+            .bind((body: any) => login(body.username, body.password))
+            .getValue()
+
+        result === null ?
+            res.status(400).json({ error: true }) :
+            res.status(result.status).json(result.content)
     })
 
     Express.post("/register", (req, res) => {
-        return makeSure(req, res, register);
+        const result = new Requirement(req.body)
+            .check("username", "password")
+            .bind((body: any) => register(body.username, body.password))
+            .getValue()
+
+        result === null ?
+            res.status(400).json({ error: true }) :
+            res.status(result.status).json(result.content)
     });
 
     Express.get("/get-user", (req, res) => {
-        const tokenQuery = req.query.token as string;
+        const result = new Requirement(req.query)
+            .check("token")
+            .bind((queries: any) => getUser(queries.token))
+            .getValue()
 
-        if (tokenQuery === undefined)
-            return res.status(400).json({error: true});
-
-        return makeSure(req, res, () => getUser(tokenQuery));
+        result === null ?
+            res.status(400).json({ error: true }) :
+            res.status(result.status).json(result.content)
     });
 }
