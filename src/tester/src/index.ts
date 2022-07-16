@@ -16,7 +16,7 @@ import {initService} from "./service/service";
 
     initService();
 
-    Express.listen(process.env.PORT || 3000, () => {
+    Express.listen(3000, () => {
         console.log("Express is listening.")
     });
 })().then(() => {
